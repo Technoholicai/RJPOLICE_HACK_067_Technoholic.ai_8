@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Deepfake | Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+      @media screen and (max-width: 600px) {
+        #flex-col-rev{
+          flex-direction: column-reverse;
+        }
+        #flex-col{
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body style="background-color: rgb(0, 0, 33);">
+
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgb(18, 18, 62);">
+            <div class="container-fluid d-flex">
+              <a class="navbar-brand fs-1 p-2 text-uppercase ps-5" style="color: white;" href="/">Deepfake</a>
+              <button class="navbar-toggler" style="background-color: white;" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse justify-content-md-center" id="navbarNavAltMarkup" style="flex: none">
+                <div class="navbar-nav ">
+                  <a class="nav-link active fs-6 mx-4 text-uppercase fw-semibold" aria-current="page" style="color: white;" href="/predict_audio">Audio Scanner</a>
+                  <a class="nav-link active fs-6 mx-4 text-uppercase fw-semibold" aria-current="page" style="color: white;" href="/predict_video">Video Scanner</a>
+                  <a class="nav-link active fs-6 mx-4 text-uppercase fw-semibold" aria-current="page" style="color: white;" href="/predict_image">Image Scanner</a>
+                  <a class="nav-link active fs-6 mx-4 text-uppercase fw-semibold" style="color: white;" href="/about">About Us</a>
+                  <button type="button" class="btn btn-outline-danger mx-4 px-4 text-uppercase"><a class="text-decoration-none text-white fw-semibold" href="/contact">Contact Us</a></button>
+                </div>
+              </div>
+            </div>
+          </nav>
+
+          <div class="container px-4 my-3">
+            <div class="row gx-5" id="flex-col-rev">
+              <div class="col">
+               <div class="p-4 d-flex flex-column m-auto">
+                <h1 class="fw-bolder my-2 lh-base" style="color: white;">Scan & Detect <br> <span class="text-danger">Deepfake</span> Videos</h1>
+                <br>
+                <h3 class="fw-normal my-2 lh-base" style="color: white;"> <span class="fw-semibold">Scan</span>  a suspicious video to find out if it's synthetically manipulated. <br> <span class="fw-semibold">Contact Us</span> for on-premise solutions.</h3>
+               </div>
+               <button type="button" class="btn btn-danger text-uppercase fw-semibold p-3 mx-4 my-2 ui-btn"><a class="text-decoration-none text-white fw-semibold" href="/predict_video"><span>Go to Video scanner</span></a></button>
+              </div>
+              <div class="col my-5">
+                  <video class="w-100" src="/static/1.mp4" controls autoplay loop></video>
+              </div>
+            </div>
+          </div>
+
+            <div class="p-4 mt-5 bg-secondary p-4 text-dark bg-opacity-10">
+              <div class="container">
+                <div class="row gx-5" id="flex-col">
+                  <div class="col">
+                    <video class="w-100" src="/static/2.mp4" controls autoplay loop></video>
+                  </div>
+                  <div class="col">
+                    <div class="p-3 w-auto  my-3">
+                      <div class="p-4 d-flex flex-column m-auto">
+                        <h1 class="fw-semibold my-2 " style="color: white;">Enemy at the Gates</h1>
+                        <br>
+                        <h3 class=" fs-5 fw-normal lh-base" style="color: white;">Cybersecurity faces an emerging threat generally known as deepfakes. Malicious uses of AI-generated synthetic media, the most powerful cyber-weapon in history is just around the corner.</h3>
+                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+
+<footer class="text-center text-lg-start text-muted" style="background-color: #0e0e1a;">
+  <div class="text-center p-4" style="color: white;">
+    © 2024 Copyright 
+    <a class="text-reset fw-bold" href="/">Deepfake.com</a>
+    All rights reserved
+  </div>
+</footer>
+
+  </body>
+</html>

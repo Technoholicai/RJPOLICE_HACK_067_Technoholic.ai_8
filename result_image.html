@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Deepfake | Image Scanner</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+      .final_result{
+        display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 50px;
+      margin-top: -145px;
+      }
+      .final_result img{
+        border: 1px solid white;
+      margin-top: 10px;
+      border-radius: 10px;
+      width: 250px;
+      }
+      @media screen and (max-width: 600px) {
+        #flex-col-rev{
+          flex-direction: column-reverse;
+        }
+        #flex-col{
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body style="background-color: rgb(0, 0, 33);">
+
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgb(18, 18, 62);">
+      <div class="container-fluid d-flex">
+        <a class="navbar-brand fs-1 p-2 text-uppercase ps-5" style="color: white;" href="/">Deepfake</a>
+        <button class="navbar-toggler" style="background-color: white;" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-md-center" id="navbarNavAltMarkup" style="flex: none">
+          <div class="navbar-nav ">
+            <a class="nav-link active fs-6 mx-4 text-uppercase fw-semibold" aria-current="page" style="color: white;" href="/predict_audio">Audio Scanner</a>
+            <a class="nav-link active fs-6 mx-4 text-uppercase fw-semibold" aria-current="page" style="color: white;" href="/predict_video">Video Scanner</a>
+            <a class="nav-link active fs-6 mx-4 text-uppercase fw-semibold" aria-current="page" style="color: white;" href="/predict_image">Image Scanner</a>
+            <a class="nav-link active fs-6 mx-4 text-uppercase fw-semibold" style="color: white;" href="/about">About Us</a>
+            <button type="button" class="btn btn-outline-danger mx-4 px-4 text-uppercase"><a class="text-decoration-none text-white fw-semibold" href="/contact">Contact Us</a></button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <form action="/predict_image" method="post" enctype="multipart/form-data" id="image-form">
+        <div class="container text-center d-flex flex-column" style="height: 67vh; margin-top: 150px;">
+          <h2 style="color: white;">Scan & Detect Deepfake Images</h2>
+          <div class="mb-3" style="width: 25vw; align-self: center;">
+            <label for="image-upload" class="form-label"></label>
+            <input type="file" id="image-upload" name="file" accept="image/*" class="form-control" required>
+          </div>
+          <div class="form-check" style="align-self: center;">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" required>
+            <label class="form-check-label" for="flexCheckDefault" style="color: white;">
+              By submitting data, you are agreeing to Terms of Services and Privacy Policy
+            </label>
+          </div>
+          <button type="button" onclick="updateImageResults()" class="btn btn-danger text-uppercase " style="display: flex;align-self: center; justify-content: center; margin: 20px; padding: 8px; width: 90px;">Scan</button>
+        </div>
+      </form>
+      <div class="final_result">
+        <p id="image-result" style="color: white;"></p>
+      <img id="uploaded-image" style="max-width: 100%; margin-top: 10px;" alt="image"/>
+      </div>
+       
+      
+  
+    <footer class="text-center text-lg-start text-muted" style="background-color: #0e0e1a;">
+      <div class="text-center p-4" style="color: white;">
+        © 2024 Copyright
+        <a class="text-reset fw-bold" href="/">Deepfake.com</a>
+        All rights reserved
+      </div>
+    </footer>
+            
+    <script>
+        // Use JavaScript to fetch image prediction results and update the HTML elements
+        async function updateImageResults() {
+            try{
+              // Create FormData object and append the file input
+            const formData = new FormData();
+            const fileInput = document.getElementById('image-upload');
+
+            formData.append('file', fileInput.files[0]);
+
+            // Fetch image result
+            const imageResponse = await fetch('/predict_image', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const imageData = await imageResponse.json();
+
+            // Update the result paragraph
+            document.getElementById('image-result').innerText = `Image Result: ${imageData.result}`;
+
+            // Update the displayed image
+            const imageElement = document.getElementById('uploaded-image');
+            imageElement.src = `data:image/png;base64, ${imageData.image_data}`;
+            imageElement.alt = 'Uploaded Image';
+            }
+            catch (error) {
+                console.error('Error updating audio results:', error);
+                document.getElementById('image-result').innerText = `Error updating results: ${error.message}`;
+            }
+        }
+
+        // Call the updateImageResults function when the page loads
+        updateImageResults();
+    </script>
+</body>
+</html>
