@@ -12,6 +12,7 @@
       align-items: center;
       margin-bottom: 50px;
       margin-top: -145px;
+      color: white;
       }
         @media screen and (max-width: 600px) {
             #flex-col-rev {
@@ -45,7 +46,7 @@
       </nav>
 
 <form action="/predict_video" method="post" enctype="multipart/form-data" id="video-form">
-    <div class="container text-center d-flex flex-column" style="height: 60vh; margin-top: 150px;">
+    <div class="container text-center d-flex flex-column" style="height: 67vh; margin-top: 150px;">
         <h2 style="color: white;">Scan & Detect Deepfake Videos</h2>
         <div class="mb-3" style="width: 25vw; align-self: center;">
             <label for="file" class="form-label"></label>
@@ -60,8 +61,11 @@
         <button type="button" onclick="updateVideoResults()" class="btn btn-danger text-uppercase" style="display: flex;align-self: center; justify-content: center; margin: 20px; padding: 8px; width: 90px;">Scan</button>
     </div>
 </form>
-<div class="final_result">
-    <p id="video-result" style="color: white;"></p></div>
+<div id="div2" style="display:none;" class="final_result">
+    <h3 id="video-result" style="color: white; font-weight: bold;"></h3>
+    <video id="uploaded-video" width="300px" controls>
+    </video>
+  </div>
 
 <footer class="text-center text-lg-start text-muted" style="background-color: #0e0e1a;">
     <div class="text-center p-4" style="color: white;">
@@ -72,35 +76,47 @@
 </footer>
 
 <script>
-    // Use JavaScript to fetch video prediction results and update the HTML elements
     async function updateVideoResults() {
-        try{
+        try {
             // Create FormData object and append the file input
-        const formData = new FormData();
-        const fileInput = document.getElementById('file');
+            const formData = new FormData();
+            const fileInput = document.getElementById('file');
 
-        formData.append('file', fileInput.files[0]);
+            formData.append('file', fileInput.files[0]);
 
-        // Fetch video result
-        const videoResponse = await fetch('/predict_video', {
-            method: 'POST',
-            body: formData,
-        });
+            // Fetch video result
+            const videoResponse = await fetch('/predict_video', {
+                method: 'POST',
+                body: formData,
+            });
 
-        const videoData = await videoResponse.json();
-
-        // Update the result paragraph
-        document.getElementById('video-result').innerText = `Video Result: ${videoData.result}`;
-
+            const videoData = await videoResponse.json();
         
-        // Show the video element
-       // videoElement.style.display = 'block';
+        // Set the result message
+        const resultElement = document.getElementById('video-result');
+        resultElement.innerText = `Video Result: ${videoData.result}`;
+        
+        // Set the src attribute of the video element
+        const videoElement = document.getElementById('uploaded-video');
+        videoElement.src = `data:video/mp4;base64, ${videoData.video_data}`;
+        videoElement.style.display = 'block'; 
+
+        } catch (error) {
+            console.error('Error updating video results:', error);
+            document.getElementById('video-result').innerText = `Error updating results: ${error.message}`;
         }
-        catch (error) {
-                console.error('Error updating audio results:', error);
-                document.getElementById('video-result').innerText = `Error updating results: ${error.message}`;
-            }
     }
+
+
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function(){
+    $("button").click(function(){
+      $("#div2").toggle();
+    });
+  });
+</script>
+
 </body>
 </html>
