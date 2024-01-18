@@ -14,12 +14,12 @@ import base64
 app = Flask(__name__)
 
 # Load the pre-trained image model
-image_model = tf.keras.models.load_model('C:/Users/vansh/Desktop/deep_ui new/deep_ui new/deep_ui/cnn_model.h5')
+image_model = tf.keras.models.load_model('C:/Users/vansh/Desktop/Main Project/deep_ui new/cnn_model.h5')
 
 # Load the pre-trained video model (replace 'lstm_model.h5' with your actual video model file)
-video_model = tf.keras.models.load_model('C:/Users/vansh/Desktop/deep_ui new/deep_ui new/deep_ui/lstm_model.h5')
+video_model = tf.keras.models.load_model('C:/Users/vansh/Desktop/Main Project/deep_ui new/lstm_model.h5')
 
-audio_model = tf.keras.models.load_model('C:/Users/vansh/Desktop/deep_ui new/deep_ui new/deep_ui/audio_model_binary.h5')  # Replace with your audio model file
+audio_model = tf.keras.models.load_model('C:/Users/vansh/Desktop/Main Project/deep_ui new/audio_model_binary.h5') 
 
 # Define the allowed file extensions for images and videos
 ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -48,8 +48,6 @@ def process_audio(file_path, threshold=0.65):
         mfcc = extract_mfcc(file_path)
         max_pad_len = 112581  # Update with the correct value
 
-        print("Original MFCC shape:", mfcc.shape)  # Add this line for debugging
-
         # Normalize MFCC features
         mfcc = (mfcc - np.mean(mfcc)) / np.std(mfcc)
 
@@ -58,7 +56,6 @@ def process_audio(file_path, threshold=0.65):
         else:
             mfcc = np.pad(mfcc, pad_width=((0, 0), (0, max_pad_len - mfcc.shape[1])), mode='constant')
 
-        print("Processed MFCC shape:", mfcc.shape)  # Add this line for debugging
 
         reshaped_mfcc = np.reshape(mfcc, (1, mfcc.shape[0], mfcc.shape[1]))
 
@@ -68,8 +65,6 @@ def process_audio(file_path, threshold=0.65):
 
         prediction = audio_model.predict(reshaped_mfcc)
         predicted_probability = prediction[0, 0]  # Probability of being class 0
-
-        print("Raw prediction values:", prediction)  # Add this line for debugging
 
         return "This Audio is Real" if predicted_probability < threshold else "This Audio is Fake"
     except Exception as e:
@@ -137,8 +132,16 @@ def predict_video():
 
             # Save the video file to a temporary directory
             video_filename = secure_filename(file.filename)
-            video_path = os.path.join('C:/Users/vansh/Desktop/deep_ui new/deep_ui new/deep_ui/uploads', video_filename)
+            video_path = os.path.join('C:/Users/vansh/Desktop/Main Project/deep_ui new/static/uploads', video_filename)
             file.save(video_path)
+            
+            # Read the video data as bytes
+            with open(video_path, 'rb') as video_file:
+                video_data = video_file.read()
+
+            # Encode the video data as base64
+            video_base64 = base64.b64encode(video_data).decode('utf-8')
+
 
             # Use OpenCV for video processing
             cap = cv2.VideoCapture(video_path)
@@ -174,7 +177,7 @@ def predict_video():
             # Compare the percentage with the threshold
             result = 'This Video is Real' if real_frame_percentage > threshold_percentage else 'This Video is Fake'
 
-            return jsonify({'result': result})
+            return jsonify({'result': result, 'video_data': video_base64})
 
         except Exception as e:
             return jsonify({'result': f'Error: {str(e)}'})
@@ -197,7 +200,7 @@ def predict_audio():
 
             # Save the uploaded file to the upload folder
             audio_filename = secure_filename(file.filename)
-            audio_path = os.path.join('C:/Users/vansh/Desktop/deep_ui new/deep_ui new/deep_ui/uploads', audio_filename)
+            audio_path = os.path.join('C:/Users/vansh/Desktop/Main Project/deep_ui new/static/uploads', audio_filename)
             file.save(audio_path)  # Fix: Use audio_path instead of file_path
 
             # Process the audio file and get the result
